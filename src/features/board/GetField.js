@@ -1,31 +1,29 @@
-// creates playing fields
-
-export const fields = []
-
-for (let i = 0; i < 40; i++){
+// creates field
+const createField = () => {
     const field = {}
-    field.index = i
+
+    field.index = null
+    field.type = null
+    field.color = null
     field.player = null
-    field.exit = null
     field.row = null
     field.column = null
+    field.figIndex = []
+    field.isMoveFrom = false
+    field.isMoveTo = false
+    field.executeMove = null
 
-    switch(i){
-        case 9:
-            field.exit = 'yellow'
-            break
-        case 19:
-            field.exit = 'read'
-            break
-        case 29:
-            field.exit = 'green'
-            break
-        case 39: 
-            field.exit = 'blue'
-            break
-        default:
-            field.exit = null
-    }
+    return field
+}
+
+// creates playing fields
+const fields = []
+
+for (let i = 0; i < 40; i++){
+    const field = createField()
+    field.index = i
+    field.type = 'boardField'
+    field.color = 'white'
 
     switch(i){
         case 0:
@@ -191,53 +189,62 @@ for (let i = 0; i < 40; i++){
         default:
             alert('cannot assign a place to this field')
     }
-
     fields.push(field)
 }
 
-// creates start fields
-
-export const playerStart = []
-
-const getField = (index, player, row, column, isOccupied) => {
-    const field = {}
+const getField = (index, type, player, row, column) => {
+    const field = createField()
     field.index = index
-    field.player = player
+    field.type = type
+    field.color = player
     field.row = row
     field.column = column
-    field.isOccupied = isOccupied
     return field   
 }
 
 const getStartFields = (player, row, column) => {
-    playerStart.push(getField(1, player, row, column, true))
-    playerStart.push(getField(2, player, row + 1, column, true))
-    playerStart.push(getField(3, player, row, column + 1, true))
-    playerStart.push(getField(4, player, row + 1, column + 1, true))
+    let startFieldsForPlayer = [null]
+    startFieldsForPlayer.push(getField(1, 'startField', player, row, column))
+    startFieldsForPlayer.push(getField(2, 'startField', player, row + 1, column))
+    startFieldsForPlayer.push(getField(3, 'startField', player, row, column + 1))
+    startFieldsForPlayer.push(getField(4, 'startField', player, row + 1, column + 1))
+    return startFieldsForPlayer
 }
 
-getStartFields('yellow', 1, 10)
-getStartFields('red', 10, 10)
-getStartFields('green', 10, 1)
-getStartFields('blue', 1, 1)
+// creates start fields
+const playerStart = {
+    yellow: getStartFields('yellow', 1, 10),
+    red: getStartFields('red', 10, 10),
+    green: getStartFields('green', 10, 1),
+    blue: getStartFields('blue', 1, 1)
+}
 
 // creates home fields
+const playerHome = {
+    yellow: [null],
+    red: [null],
+    green: [null],
+    blue: [null]
+}
 
-export const playerHome = []
+playerHome.yellow.push(getField(1, 'homeField', 'yellow', 2, 6))
+playerHome.yellow.push(getField(2, 'homeField', 'yellow', 3, 6))
+playerHome.yellow.push(getField(3, 'homeField', 'yellow', 4, 6))
+playerHome.yellow.push(getField(4, 'homeField', 'yellow', 5, 6,))
 
-playerHome.push(getField(1, 'yellow', 2, 6, false))
-playerHome.push(getField(2, 'yellow', 3, 6, false))
-playerHome.push(getField(3, 'yellow', 4, 6, false))
-playerHome.push(getField(4, 'yellow', 5, 6, false))
-playerHome.push(getField(1, 'red', 6, 10, false))
-playerHome.push(getField(2, 'red', 6, 9, false))
-playerHome.push(getField(3, 'red', 6, 8, false))
-playerHome.push(getField(4, 'red', 6, 7, false))
-playerHome.push(getField(1, 'green', 10, 6, false))
-playerHome.push(getField(2, 'green', 9, 6, false))
-playerHome.push(getField(3, 'green', 8, 6, false))
-playerHome.push(getField(4, 'green', 7, 6, false))
-playerHome.push(getField(1, 'blue', 6, 2, false))
-playerHome.push(getField(2, 'blue', 6, 3, false))
-playerHome.push(getField(3, 'blue', 6, 4, false))
-playerHome.push(getField(4, 'blue', 6, 5, false))
+playerHome.red.push(getField(1, 'homeField', 'red', 6, 10))
+playerHome.red.push(getField(2, 'homeField', 'red', 6, 9))
+playerHome.red.push(getField(3, 'homeField', 'red', 6, 8))
+playerHome.red.push(getField(4, 'homeField', 'red', 6, 7))
+
+playerHome.green.push(getField(1, 'homeField', 'green', 10, 6))
+playerHome.green.push(getField(2, 'homeField', 'green', 9, 6))
+playerHome.green.push(getField(3, 'homeField', 'green', 8, 6))
+playerHome.green.push(getField(4, 'homeField', 'green', 7, 6))
+
+playerHome.blue.push(getField(1, 'homeField', 'blue', 6, 2))
+playerHome.blue.push(getField(2, 'homeField', 'blue', 6, 3))
+playerHome.blue.push(getField(3, 'homeField', 'blue', 6, 4))
+playerHome.blue.push(getField(4, 'homeField', 'blue', 6, 5))
+
+export {fields, playerStart, playerHome}

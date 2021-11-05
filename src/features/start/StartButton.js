@@ -9,38 +9,27 @@ const Bttn = styled.button`
 `
 
 export function StartButton(props){
-    const {gameOn, setGameOn, playingPlayers} = props
+    const {
+        gameOn,
+        startNewGame,
+        players,
+    } = props
 
     // sets the text of the button
     let text
     gameOn ? text = 'New Game' : text = 'Start'
 
-    // disables the button if less than two players are selected
-    let buttonDisabled
-    let count = 0
-    for (let player in playingPlayers){
-        if (playingPlayers[player]){
-            count++
-            if (count === 2){
-                break
-            }
-        }
-    }
-    count === 2 ? buttonDisabled = false : buttonDisabled = true
-
-    // styles the button if disabled
+    // disables and styles the button if less than two players are selected
+    let buttonDisabled = players.length < 2 
+    
     let style
     if (buttonDisabled){
         style = {backgroundColor: 'grey', cursor: 'inherit'}
     }
 
-    const handleClick = () => {
-        setGameOn(prev => !prev)
-    }
-
     return <Bttn
         type='button'
-        onClick={handleClick}
+        onClick={startNewGame}
         disabled={buttonDisabled}
         style={style}
     >{text}</Bttn>

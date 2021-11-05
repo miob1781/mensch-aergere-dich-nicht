@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import {useState} from 'react'
 import {Player} from './Player.js'
 import {StartButton} from './StartButton.js'
 import {Display} from './Display.js'
@@ -10,34 +9,42 @@ const StartContainer = styled.div`
 
 export function Start(props){
     const {
-        text,
         gameOn,
-        setGameOn,
-        hasWon,
-        playerOn,
+        startNewGame,
         playingPlayers,
         setPlayingPlayers,
+        players,
+        playerOn,
         computerPlays, 
-        setComputerPlays
+        setComputerPlays,
+        hasWon
     } = props
 
-    const players = ['yellow', 'red', 'green', 'blue']
+    const allPlayers = ['yellow', 'red', 'green', 'blue']
+    
+    let display
+    gameOn ? display = 'none' : display = 'block'
 
     return (
         <StartContainer>
-            {players.map(player => {
-                return <Player
-                    player={player}
-                    playingPlayers={playingPlayers}
-                    setPlayingPlayers={setPlayingPlayers}
-                    computerPlays={computerPlays}
-                    setComputerPlays={setComputerPlays} />
-            })}
+            <div style={{display: display}}>
+                {allPlayers.map(player => {
+                    return <Player
+                        player={player}
+                        playingPlayers={playingPlayers}
+                        setPlayingPlayers={setPlayingPlayers}
+                        computerPlays={computerPlays}
+                        setComputerPlays={setComputerPlays} />
+                })}
+            </div>
             <StartButton
                 gameOn={gameOn}
-                setGameOn={setGameOn}
-                playingPlayers={playingPlayers} />
-            <Display text={text} />
+                startNewGame={startNewGame}
+                players={players} />
+            <Display
+                gameOn={gameOn}
+                playerOn={playerOn}
+                hasWon={hasWon} />
         </StartContainer>
     )
 }
