@@ -1,62 +1,63 @@
 import styled from 'styled-components'
+import {useSelector, useDispatch} from 'react-redux'
+import {togglePlayerPlays, toggleComputerPlays} from './StartSlice.js'
 
-const InputContainer = styled.div`
+const Form = styled.form`
     background-color: white;
 `
 
-const RadioContainer = styled.div`
+const Radio = styled.div`
     margin-left: 20px;
 `
 
-export function Player(props){
-    const {
-        player,
-        playingPlayers,
-        setPlayingPlayers,
-        computerPlays,
-        setComputerPlays
-    } = props
-
+export function Player(props) {
+    const {player} = props
     const playerLabels = {yellow: 'Yellow', red: 'Red', green: 'Green', blue: 'Blue'}
+    const dispatch = useDispatch()
+    const players = useSelector(state => state.start.players)
 
     const handleCheckbox = () => {
-        setPlayingPlayers(prev => ({...prev, [player]: !prev[player]}))
+        dispatch(togglePlayerPlays(player))
     }
 
     const handleRadio = () => {
-        setComputerPlays(prev => ({...prev, [player]: !prev[player]}))
+        dispatch(toggleComputerPlays(player))
     }
 
     return (
-        <InputContainer>
+        <Form data-testid={'select-' + player}>
             <input
                 type='checkbox'
                 id={player}
-                data-testid={'select-' + player}
+                name={player}
                 onChange={handleCheckbox}
-                checked={playingPlayers[player]} />
+                checked={players[player].plays}
+            />
             <label for={player}>{playerLabels[player]}</label>
             <br />
-            <RadioContainer>
+            <Radio>
                 <input
                     type='radio'
                     id={'human-' + player}
-                    data-testid={'human-' + player}
                     name={'radio-' + player}
                     value='human'
                     onChange={handleRadio}
-                    checked={!computerPlays[player]} />
+                    checked={!players[player].computerPlays}
+                    disabled={!players[player].plays}
+                />
                 <label for={'human-' + player}>Human</label>
                 <input
                     type='radio'
                     id={'computer-' + player}
-                    data-testid={'computer-' + player}
                     name={'radio-' + player}
                     value='computer'
                     onChange={handleRadio}
-                    checked={computerPlays[player]} />
+                    checked={players[player].computerPlays}
+                    disabled={!players[player].plays}
+                    data-testid={player + '-computer'}
+                />
                 <label for={'computer-' + player}>Computer</label>
-            </RadioContainer>
-        </InputContainer>
+            </Radio>
+        </Form>
     )
 }

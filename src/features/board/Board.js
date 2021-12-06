@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import {Field} from './Field.js'
 import {Dice} from './Dice.js'
-import {useState} from 'react'
+import {fields, playerStart, playerHome} from './GetField.js';
 
 const BoardContainer = styled.div`
     display: inline-grid;
@@ -15,25 +15,11 @@ const BoardContainer = styled.div`
     background-color: maroon;
 `
 
-export function Board(props){
-    const {
-        dice,
-        fields,
-        startFields,
-        homeFields,
-        gameOn,
-        playerOn,
-        throwDice,
-        gotMoves
-    } = props
-
-    const [mouseOverMoveFrom, setMouseOverMoveFrom] = useState(false)
-    const [figIndexMouse, setFigIndexMouse] = useState(null)
-
+export function Board() {
     const getTestidParticle = array => {
         if (array === fields){
             return 'field-'
-        } else if (array === startFields){
+        } else if (array === playerStart){
             return 'startField-'
         } else {
             return 'homeField-'
@@ -48,37 +34,29 @@ export function Board(props){
                 }
                 return <Field
                     key={field.index}
-                    data-testid={getTestidParticle(array) + field.player + field.index}
-                    field={field}
-                    playerOn={playerOn}
-                    gotMoves={gotMoves}
-                    mouseOverMoveFrom={mouseOverMoveFrom}
-                    setMouseOverMoveFrom={setMouseOverMoveFrom}
-                    figIndexMouse={figIndexMouse}
-                    setFigIndexMouse={setFigIndexMouse} />
+                    data-testid={getTestidParticle(array) + field.color + field.index}
+                    row={field.row}
+                    column={field.column}
+                    index={field.index}
+                    type={field.type}
+                    color={field.color}
+                />
             })
         )
     }
 
     return (
         <BoardContainer>
-            <Dice
-                dice={dice}
-                gameOn={gameOn}
-                playerOn={playerOn}
-                throwDice={throwDice}
-                gotMoves={gotMoves}
-            />
+            <Dice />
             {getFieldComponents(fields)}
-            {getFieldComponents(startFields.yellow)}
-            {getFieldComponents(startFields.red)}
-            {getFieldComponents(startFields.green)}
-            {getFieldComponents(startFields.blue)}
-            {getFieldComponents(homeFields.yellow)}
-            {getFieldComponents(homeFields.red)}
-            {getFieldComponents(homeFields.green)}
-            {getFieldComponents(homeFields.blue)}
-
+            {getFieldComponents(playerStart.yellow)}
+            {getFieldComponents(playerStart.red)}
+            {getFieldComponents(playerStart.green)}
+            {getFieldComponents(playerStart.blue)}
+            {getFieldComponents(playerHome.yellow)}
+            {getFieldComponents(playerHome.red)}
+            {getFieldComponents(playerHome.green)}
+            {getFieldComponents(playerHome.blue)}
         </BoardContainer>
     )
 }

@@ -1,48 +1,32 @@
-import styled from 'styled-components'
-
-const fieldColors = {
-    yellow: 'moccasin',
-    red: 'salmon',
-    green: 'lightgreen',
-    blue: 'lightblue'
-}
-
-const getFieldContainer = (row, column, fieldColor, borderColor, borderWidth, borderStyle, cursor) => {
-    return styled.div`
-        grid-row-start: ${row};
-        grid-column-start: ${column};
-        border-radius: 50%;
-        border-color: ${borderColor};
-        border-width: ${borderWidth};
-        border-style: ${borderStyle};
-        background-color: ${fieldColor};
-        cursor: ${cursor};
-    `
-}
+import {useSelector, useDispatch} from 'react-redux'
+import {fieldColors, getFieldContainer} from './BoardFunctions.js'
+import {setMouseOver, setMouseOut, setFigIndexMouse} from './BoardSlice.js'
 
 export function Field(props) {
-    const {
-        field,
-        playerOn,
-        gotMoves,
-        mouseOverMoveFrom,
-        setMouseOverMoveFrom,
-        figIndexMouse,
-        setFigIndexMouse
-    } = props
+    const {index, row, column, type, color} = props
+    const dispatch = useDispatch()
 
-    const {
-        index,
-        row,
-        column,
-        color,
-        player,
-        isMoveFrom,
-        isMoveTo,
-        figIndex,
-        executeMove
-    } = field
-    
+    // selects field-specific values from the global state
+    const field = useSelector(state => {
+        let field
+        if (type === 'boardField') {
+            field = state.board.boardFields[index]
+        } else if (type === 'startField') {
+            field = state.board.startFields[color][index]
+        } else {
+            field = state.board.homeFields[color][index]
+        }
+        return field
+    }) 
+    const {player, isMoveFrom, isMoveTo, figIndex, executeMove} = field
+    const readyToMove = useSelector(state => isMoveFrom && state.board.gotMoves)
+    const displayDottedBorder = useSelector(state => {
+        const playerOn = state.board.playerOn
+        const computerOn = state.start.players[playerOn].computerPlays
+        return isMoveTo && state.board.mouseOverMoveFrom && !computerOn && figIndex.includes(state.board.figIndexMouse)
+    })
+    const playerOn = useSelector(state => displayDottedBorder ? state.board.playerOn : null)
+
     // sets the field color displayed
     let fieldColor = color
     if (player) {
@@ -53,7 +37,7 @@ export function Field(props) {
 
     // sets border
     let borderColor, borderWidth, borderStyle
-    if (mouseOverMoveFrom && isMoveTo && figIndex.includes(figIndexMouse)) {
+    if (displayDottedBorder) {
         borderColor = playerOn
         borderWidth = '5px'
         borderStyle = 'dotted'
@@ -68,10 +52,9 @@ export function Field(props) {
     }
 
     // sets cursor
-    let cursor
-    isMoveFrom ? cursor = 'pointer' : cursor = 'inherit'
+    const cursor = readyToMove ? 'pointer' : 'inherit'
 
-    // creates FieldContainer
+    // creates field
     const FieldContainer = getFieldContainer(
         row,
         column,
@@ -83,18 +66,18 @@ export function Field(props) {
     )
 
     const handleMouseOver = () => {
-        if (isMoveFrom && gotMoves) {
-            setMouseOverMoveFrom(true)
-            setFigIndexMouse(figIndex[0])
+        if (readyToMove) {
+            dispatch(setMouseOver())
+            dispatch(setFigIndexMouse(figIndex[0]))
         }
     }
 
     const handleMouseOut = () => {
-        setMouseOverMoveFrom(false)
+        dispatch(setMouseOut())
     }
 
     const handleClick = () => {
-        if (isMoveFrom && gotMoves) {
+        if (readyToMove) {
             executeMove()
         }
     }
@@ -103,6 +86,7 @@ export function Field(props) {
         <FieldContainer
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
-            onClick={handleClick} />
+            onClick={handleClick}
+        />
     )
 }

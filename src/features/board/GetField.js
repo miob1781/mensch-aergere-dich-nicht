@@ -1,7 +1,6 @@
 // creates field
 const createField = () => {
     const field = {}
-
     field.index = null
     field.type = null
     field.color = null
@@ -12,19 +11,16 @@ const createField = () => {
     field.isMoveFrom = false
     field.isMoveTo = false
     field.executeMove = null
-
     return field
 }
 
 // creates playing fields
 const fields = []
-
 for (let i = 0; i < 40; i++){
     const field = createField()
     field.index = i
     field.type = 'boardField'
     field.color = 'white'
-
     switch(i){
         case 0:
             field.row = 1
@@ -231,17 +227,14 @@ playerHome.yellow.push(getField(1, 'homeField', 'yellow', 2, 6))
 playerHome.yellow.push(getField(2, 'homeField', 'yellow', 3, 6))
 playerHome.yellow.push(getField(3, 'homeField', 'yellow', 4, 6))
 playerHome.yellow.push(getField(4, 'homeField', 'yellow', 5, 6,))
-
 playerHome.red.push(getField(1, 'homeField', 'red', 6, 10))
 playerHome.red.push(getField(2, 'homeField', 'red', 6, 9))
 playerHome.red.push(getField(3, 'homeField', 'red', 6, 8))
 playerHome.red.push(getField(4, 'homeField', 'red', 6, 7))
-
 playerHome.green.push(getField(1, 'homeField', 'green', 10, 6))
 playerHome.green.push(getField(2, 'homeField', 'green', 9, 6))
 playerHome.green.push(getField(3, 'homeField', 'green', 8, 6))
 playerHome.green.push(getField(4, 'homeField', 'green', 7, 6))
-
 playerHome.blue.push(getField(1, 'homeField', 'blue', 6, 2))
 playerHome.blue.push(getField(2, 'homeField', 'blue', 6, 3))
 playerHome.blue.push(getField(3, 'homeField', 'blue', 6, 4))

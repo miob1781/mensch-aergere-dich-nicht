@@ -1,37 +1,18 @@
-import styled from 'styled-components'
-import { useState } from 'react'
+import {useState} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
+import {DiceContainer, getDiceDots} from './CreateDice.js'
+import {selectReadyToClickOnDice} from '../start/StartSlice.js'
+import {throwDice, setDiceThrown} from './BoardSlice.js'
 
-const DiceContainer = styled.div`
-    display: inline-grid;
-    position: relative;
-    right: 130px;
-    bottom: 130px;
-    width: 36px;
-    height: 36px;
-    grid-template-columns: repeat(3, 10px);
-    grid-template-rows: repeat(3, 10px);
-    gap: 3px;
-    padding: 8px;
-    border: black 2px solid;
-    border-radius: 15%;
-    background-color: white;
-    grid-area: 6/6/span 1/span 1;
-`
+export function Dice() {
+    const dispatch = useDispatch()
+    const diceResult = useSelector(state => state.board.dice)
+    const playerOn = useSelector(state => state.board.playerOn)
+    const readyToClickOnDice = useSelector(selectReadyToClickOnDice)
+    const diceWhite = useSelector(state => state.board.diceThrown || state.board.gotMoves)
+    const [isPlaying, setIsPlaying] = useState(false)
 
-export function Dice(props){
-    const {
-        dice,
-        gameOn,
-        playerOn,
-        throwDice,
-        gotMoves
-    } = props
-
-    let cursor = 'inherit'
-    if (gameOn && !gotMoves) {
-        cursor = 'pointer'
-    }
-
+    // sets position of dice
     let right, bottom
     if (playerOn === 'yellow') {
         right = '-115px'
@@ -46,80 +27,31 @@ export function Dice(props){
         right = '130px'
         bottom = '130px'
     }
-
-    const [countDice, setCountDice] = useState(0)
+    
+    const style = {
+        right: right,
+        bottom: bottom,
+        cursor: readyToClickOnDice ? 'pointer' : 'inherit',
+        backgroundColor: diceWhite ? 'white' : 'lightgrey',
+        animation: isPlaying ? 'diceLightUp 400ms ease-out 0s 1 normal forwards' : 'unset'
+    }
 
     const handleClick = () => {
-        setCountDice(prev => prev + 1)
-    if (gameOn && !gotMoves) {
-            throwDice()
-        }
+      if (readyToClickOnDice) {
+        setIsPlaying(true)
+        dispatch(throwDice())
+        dispatch(setDiceThrown(true))
+      }
     }
 
     return (
         <DiceContainer
             onClick={handleClick}
-            style={{cursor: cursor, right: right, bottom: bottom}}>
-            {getDiceDots(dice)}
-            <p>countDice: {countDice}</p>
+            style={style}
+            data-testid={'dice'}
+            onAnimationEnd={() => {setIsPlaying(false)}}
+        >
+            {getDiceDots(diceResult)}
         </DiceContainer>
     )
-}
-
-const getDiceDot = (key, row, column, dice) => {
-    let visibility = 'hidden'
-    switch(dice){
-        case 1:
-            if (key === 22){
-                visibility = 'visible'
-            }
-            break
-        case 2:
-            if (key === 31 || key === 13){
-                visibility = 'visible'
-            }
-            break
-        case 3:
-            if (key === 31 || key === 22 || key === 13){
-                visibility = 'visible'
-            }
-            break
-        case 4:
-            if (key === 11 || key === 31 || key === 13 || key === 33){
-                visibility = 'visible'
-            }
-            break
-        case 5:
-            if (key === 11 || key === 31 || key === 22 || key === 13 || key === 33){
-                visibility = 'visible'
-            }
-            break
-        case 6:
-            if (key === 11 || key === 31 || key === 21 || key === 23 || key === 13 || key === 33){
-                visibility = 'visible'
-            }
-            break
-        default: alert('no dice')
-        }
-
-    const Dot = styled.div`
-        grid-row-start: ${row};
-        grid-column-start: ${column};
-        border-radius: 50%;
-        background-color: black;
-        visibility: ${visibility};
-    `
-    return <Dot key={key} />
-}
-
-const getDiceDots = dice => {
-    let diceDots = []
-    let key
-    for (let i=1; i<4; i++){
-        for (let j=1; j<4; j++){
-            key = i * 10 + j
-            diceDots.push(getDiceDot(key, i, j, dice))
-        }
-    }
-    return diceDots
 }

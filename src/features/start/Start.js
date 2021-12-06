@@ -1,50 +1,24 @@
 import styled from 'styled-components'
+import {useSelector} from 'react-redux'
 import {Player} from './Player.js'
 import {StartButton} from './StartButton.js'
 import {Display} from './Display.js'
 
-const StartContainer = styled.div`
+const StartContainer = styled.div``
 
-`
-
-export function Start(props){
-    const {
-        gameOn,
-        startNewGame,
-        playingPlayers,
-        setPlayingPlayers,
-        players,
-        playerOn,
-        computerPlays, 
-        setComputerPlays,
-        hasWon
-    } = props
-
+export function Start() {
+    const gameOn = useSelector(state => state.start.gameOn)
     const allPlayers = ['yellow', 'red', 'green', 'blue']
-    
-    let display
-    gameOn ? display = 'none' : display = 'block'
 
     return (
         <StartContainer>
-            <div style={{display: display}}>
-                {allPlayers.map(player => {
-                    return <Player
-                        player={player}
-                        playingPlayers={playingPlayers}
-                        setPlayingPlayers={setPlayingPlayers}
-                        computerPlays={computerPlays}
-                        setComputerPlays={setComputerPlays} />
-                })}
+            <div
+                style={{display: gameOn? 'none' : 'block'}}
+            >
+                {allPlayers.map(player => <Player player={player}  />)}
             </div>
-            <StartButton
-                gameOn={gameOn}
-                startNewGame={startNewGame}
-                players={players} />
-            <Display
-                gameOn={gameOn}
-                playerOn={playerOn}
-                hasWon={hasWon} />
+            <StartButton />
+            <Display />
         </StartContainer>
     )
 }
