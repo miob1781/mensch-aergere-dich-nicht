@@ -140,12 +140,11 @@ const boardSlice = createSlice({
         },
         setMouseOver: (state, action) => {
             state.mouseOverMoveFrom = true
+            state.figIndexMouse = action.payload
         },
         setMouseOut: (state, action) => {
             state.mouseOverMoveFrom = false
-        },
-        setFigIndexMouse: (state, action) => {
-            state.figIndexMouse = action.payload
+            state.figIndexMouse = null
         },
         resetValues: (state, action) => {
             state.diceThrown = false
@@ -182,6 +181,5 @@ export const {
     setHasWon,
     setMouseOver,
     setMouseOut,
-    setFigIndexMouse,
     resetValues
 } = boardSlice.actions;

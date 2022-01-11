@@ -5,21 +5,30 @@ import {fields, playerStart, playerHome} from './GetField.js';
 
 const BoardContainer = styled.div`
     display: inline-grid;
-    width: 490px;
-    height: 490px;
+    max-width: 490px;
     padding: 20px;
     margin-left: 50px;
-    grid-template-columns: repeat(11, 40px);
-    grid-template-rows: repeat(11, 40px);
+    margin-right: 10px;
+    grid-template-columns: repeat(11, minmax(0, 40px));
+    grid-template-rows: repeat(11, minmax(0, 40px));
     gap: 5px;
     background-color: maroon;
+    @media only screen and (max-width: 600px) {
+        margin-left: 0px;
+        margin-right: 20px;
+        display: grid;
+        width: 84vw;
+        height: 84vw;
+        gap: 0.9vw;
+        padding: 4.2vw;
+    }
 `
 
 export function Board() {
     const getTestidParticle = array => {
-        if (array === fields){
+        if (array === fields) {
             return 'field-'
-        } else if (array === playerStart){
+        } else if (array === playerStart) {
             return 'startField-'
         } else {
             return 'homeField-'

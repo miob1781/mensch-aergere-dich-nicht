@@ -4,22 +4,20 @@ import {Board} from './features/board/Board.js'
 import {ExecutiveFunction} from './features/ExecutiveFunction.js'
 
 const AppBody = styled.body`
-  width: 800px;
   background-color: white;
-  font-family: Calibri;
+  font-family: Calibri, 'Trebuchet MS', sans-serif;
   box-sizing: border-box;
 `
 
 const Header = styled.header`
-  width: 100%;
+  font-family: 'Kaushan Script', cursive;
+  font-size: 1.3em;
 `
 
 const Main = styled.main`
-  width: 100%;
 `
 
 const Footer = styled.footer`
-  width: 100%;
   font-size: 0.8em;
 `
 

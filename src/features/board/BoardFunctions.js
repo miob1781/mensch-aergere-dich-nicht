@@ -46,5 +46,8 @@ export const getFieldContainer = (row, column, fieldColor, borderColor, borderWi
         border-style: ${borderStyle};
         background-color: ${fieldColor};
         cursor: ${cursor};
+        @media only screen and (max-width: 600px) {
+            border-width: ${borderColor === 'black' ? '0.8vw' : 'none'};
+        }
     `
 }

@@ -23,6 +23,17 @@ export const DiceContainer = styled.div`
     border-radius: 15%;
     background-color: lightgrey;
     grid-area: 6/6/span 1/span 1;
+    @media only screen and (max-width: 600px) {
+        right: 25vw;
+        bottom: 25vw;
+        width: 7vw;
+        height: 7vw;
+        grid-template-columns: repeat(3, 2vw);
+        grid-template-rows: repeat(3, 2vw);
+        gap: 0.5vw;
+        padding: 1.5vw;
+        border: black 0.6vw solid;
+    }
 `
 
 const getDiceDot = (key, row, column, dice) => {

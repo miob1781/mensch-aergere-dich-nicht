@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import {useSelector} from 'react-redux'
 
 const DisplayContainer = styled.div`
-    width: 50%;
+    max-width: 350px;
 `
 
 export function Display() {

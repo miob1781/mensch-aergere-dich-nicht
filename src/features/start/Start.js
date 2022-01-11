@@ -4,7 +4,12 @@ import {Player} from './Player.js'
 import {StartButton} from './StartButton.js'
 import {Display} from './Display.js'
 
-const StartContainer = styled.div``
+const StartContainer = styled.div`
+    margin-bottom: 20px;
+    @media only screen and (max-width: 600px) {
+        font-size: 1.4em;
+    }
+`
 
 export function Start() {
     const gameOn = useSelector(state => state.start.gameOn)
@@ -12,9 +17,7 @@ export function Start() {
 
     return (
         <StartContainer>
-            <div
-                style={{display: gameOn? 'none' : 'block'}}
-            >
+            <div style={{display: gameOn? 'none' : 'block'}}>
                 {allPlayers.map(player => <Player player={player}  />)}
             </div>
             <StartButton />

@@ -14,18 +14,19 @@ export function Dice() {
 
     // sets position of dice
     let right, bottom
+    const onPhone = window.innerWidth <= 600
     if (playerOn === 'yellow') {
-        right = '-115px'
-        bottom = '130px'
+        right = onPhone ? '-19vw' : '-115px'
+        bottom = onPhone ? '23vw' : '130px'
     } else if (playerOn === 'red') {
-        right = '-115px'
-        bottom = '-110px'
+        right = onPhone ? '-19vw' : '-115px'
+        bottom = onPhone ? '-18vw' : '-110px'
     } else if (playerOn === 'green') {
-        right = '130px'
-        bottom = '-110px'
+        right = onPhone ? '23vw' : '130px'
+        bottom = onPhone ? '-18vw' : '-110px'
     } else {
-        right = '130px'
-        bottom = '130px'
+        right = onPhone ? '23vw' : '130px'
+        bottom = onPhone ? '23vw' : '130px'
     }
     
     const style = {

@@ -187,13 +187,13 @@ export function ExecutiveFunction() {
         let movesArray = []
         let moveFieldsArray = []
     
-        // loops through each figure to get its available move
+        // loops through each piece to get its available move
         for (let fig of pos.positions) {
           const figIndex = fig.figIndex
           const fieldIndex = fig.fieldIndex
           let nextFieldIndex, nextField
     
-          //if the figure is on a start field
+          //if the piece is on a start field
           if (fig.type === 'startField') {
             if (diceResult === 6 && !onEntryField) {
               nextFieldIndex = entryFieldIndex
@@ -215,7 +215,7 @@ export function ExecutiveFunction() {
               return
             }
     
-          // if the figure is on a board field or a home field
+          // if the piece is on a board field or a home field
           } else {
             const moveFromEntryField = onEntryField && pos.numFigsOut < 4
                 && !pos.positions.find(f => f.fieldIndex === entryFieldIndex + diceResult && f.type === 'boardField')

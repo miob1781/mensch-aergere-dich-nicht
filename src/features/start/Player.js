@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import {togglePlayerPlays, toggleComputerPlays} from './StartSlice.js'
 
 const Form = styled.form`
-    background-color: white;
+    margin-bottom: 3px;
 `
 
 const Radio = styled.div`
@@ -45,7 +45,7 @@ export function Player(props) {
                     checked={!players[player].computerPlays}
                     disabled={!players[player].plays}
                 />
-                <label for={'human-' + player}>Human</label>
+                <label style={{marginRight: '10px'}} for={'human-' + player}>Human</label>
                 <input
                     type='radio'
                     id={'computer-' + player}

@@ -1,6 +1,6 @@
 import {useSelector, useDispatch} from 'react-redux'
 import {fieldColors, getFieldContainer} from './BoardFunctions.js'
-import {setMouseOver, setMouseOut, setFigIndexMouse} from './BoardSlice.js'
+import {setMouseOver, setMouseOut} from './BoardSlice.js'
 
 export function Field(props) {
     const {index, row, column, type, color} = props
@@ -66,9 +66,8 @@ export function Field(props) {
     )
 
     const handleMouseOver = () => {
-        if (readyToMove) {
-            dispatch(setMouseOver())
-            dispatch(setFigIndexMouse(figIndex[0]))
+        if (readyToMove && !('ontouchstart' in window)) {
+            dispatch(setMouseOver(figIndex[0]))
         }
     }
 
