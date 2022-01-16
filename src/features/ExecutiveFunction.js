@@ -38,31 +38,31 @@ export function ExecutiveFunction() {
     const participatingPlayers = useSelector(selectParticipatingPlayers)
     const computerOn = useSelector(selectComputerOn)
 
-      // checks if an opponent is hit
-      const checkHit = nextField => {
+    // checks if an opponent is hit
+    const checkHit = nextField => {
         if (nextField.player) {
-          const oppPlayer = nextField.player
-          const oppFig = positions[oppPlayer].positions.find(fig => fig.fieldIndex === nextField.index && fig.type === 'boardField')
-          const oppFieldObject = {
-            fieldIndex: oppFig.figIndex,
-            type: 'startField',
-            player: oppPlayer,
-          }
-          const oppPlayerObject = {
-            player: oppPlayer,
-            figIndex: oppFig.figIndex,
-            fieldIndex: oppFig.figIndex,
-            type: 'startField',
-            changeNumFigsOut: 'decrement',
-            decrementLastFreeHomeField: false
-          }
-          dispatch(updateFieldAfterMove(oppFieldObject))
-          dispatch(updatePosition(oppPlayerObject))
+            const oppPlayer = nextField.player
+            const oppFig = positions[oppPlayer].positions.find(fig => fig.fieldIndex === nextField.index && fig.type === 'boardField')
+            const oppFieldObject = {
+                fieldIndex: oppFig.figIndex,
+                type: 'startField',
+                player: oppPlayer,
+            }
+            const oppPlayerObject = {
+                player: oppPlayer,
+                figIndex: oppFig.figIndex,
+                fieldIndex: oppFig.figIndex,
+                type: 'startField',
+                changeNumFigsOut: 'decrement',
+                decrementLastFreeHomeField: false
+            }
+            dispatch(updateFieldAfterMove(oppFieldObject))
+            dispatch(updatePosition(oppPlayerObject))
         }
-      }
+    }
 
-      // sets move-specific values of fields
-      const getMoveValues = (fieldIndex, typeField, nextField, figIndex, lastFreeHomeField, entryFieldIndex) => {
+    // sets move-specific values of fields
+    const getMoveValues = (fieldIndex, typeField, nextField, figIndex, lastFreeHomeField, entryFieldIndex) => {
         const nextFieldIndex = nextField.index
         const typeNextField = nextField.type
         let changeNumFigsOut = null
@@ -72,10 +72,10 @@ export function ExecutiveFunction() {
             changeNumFigsOut = 'increment'
         }
         if (typeNextField === 'homeField' && nextFieldIndex === lastFreeHomeField) {
-          decrementLastFreeHomeField = true
-          if (lastFreeHomeField === 1) {
-            winning = true
-          }
+            decrementLastFreeHomeField = true
+            if (lastFreeHomeField === 1) {
+                winning = true
+            }
         }
         const updateFieldObject = {
             fieldIndex: fieldIndex,
@@ -96,12 +96,12 @@ export function ExecutiveFunction() {
                     player: playerOn
                 }
                 const updatePositionObject = {
-                  player: playerOn,
-                  figIndex: figIndex,
-                  fieldIndex: nextFieldIndex,
-                  type: typeNextField,
-                  changeNumFigsOut: changeNumFigsOut,
-                  decrementLastFreeHomeField: decrementLastFreeHomeField
+                    player: playerOn,
+                    figIndex: figIndex,
+                    fieldIndex: nextFieldIndex,
+                    type: typeNextField,
+                    changeNumFigsOut: changeNumFigsOut,
+                    decrementLastFreeHomeField: decrementLastFreeHomeField
                 }
                 dispatch(updateFieldAfterMove(updateFieldAfterMoveObject))
                 dispatch(updateFieldAfterMove(updateNextFieldAfterMoveObject))
@@ -109,12 +109,12 @@ export function ExecutiveFunction() {
                 dispatch(setGotMoves(false))
                 dispatch(setReadyToCleanUp(true))
                 if (winning) {
-                  dispatch(setHasWon(playerOn))
+                    dispatch(setHasWon(playerOn))
                 }
                 if (typeField === 'startField') {
-                  dispatch(resetDiceCount())
+                    dispatch(resetDiceCount())
                 } else {
-                  dispatch(setGoToNextPlayer(true))
+                    dispatch(setGoToNextPlayer(true))
                 }
             }
         }
@@ -138,7 +138,7 @@ export function ExecutiveFunction() {
                 moveRating += 8
             } else {
                 if (nextField.player) {
-                 moveRating += 5
+                    moveRating += 5
                 }
                 let currentIndex = fieldIndex
                 let count = 0
@@ -173,11 +173,11 @@ export function ExecutiveFunction() {
             }
         }
         return [updateFieldObject.executeMove, moveRating]
-      }
+    }
       
-      // gets next available moves for player based on dice result
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      const getMoves = () => {
+    // gets next available moves for player based on dice result
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getMoves = () => {
         const pos = positions[playerOn]
         const entryFields = {yellow: 0, red: 10, green: 20, blue: 30}
         const exitFields = {yellow: 39, red: 9, green: 19, blue: 29}  
@@ -189,99 +189,99 @@ export function ExecutiveFunction() {
     
         // loops through each piece to get its available move
         for (let fig of pos.positions) {
-          const figIndex = fig.figIndex
-          const fieldIndex = fig.fieldIndex
-          let nextFieldIndex, nextField
-    
-          //if the piece is on a start field
-          if (fig.type === 'startField') {
-            if (diceResult === 6 && !onEntryField) {
-              nextFieldIndex = entryFieldIndex
-              nextField = boardFields[nextFieldIndex]
-              if (nextField.player === playerOn) {
-                continue
-              }
-              const move = getMoveValues(fieldIndex, fig.type, nextField, figIndex, pos.lastFreeHomeField, entryFieldIndex)
-              movesArray.push(move)
-              moveFieldsArray.push([fieldIndex, fig.type])
-              moveFieldsArray.push([nextFieldIndex, nextField.type])      
-            } else if (pos.numFigsOut + pos.lastFreeHomeField === 4) {
-              if (diceCount === 2) {
-                dispatch(resetDiceCount())
-                dispatch(getNextPlayer(participatingPlayers))
-            } else {
-                dispatch(incrementDiceCount())
-              }
-              return
-            }
-    
-          // if the piece is on a board field or a home field
-          } else {
-            const moveFromEntryField = onEntryField && pos.numFigsOut < 4
-                && !pos.positions.find(f => f.fieldIndex === entryFieldIndex + diceResult && f.type === 'boardField')
-            if ((diceResult === 6 && !onEntryField && pos.numFigsOut < 4)
-              || (moveFromEntryField && fieldIndex !== entryFieldIndex)) {
-                continue
-            }
-            const passExitField = fieldIndex <= exitFieldIndex && fieldIndex + diceResult > exitFieldIndex
-            if (fig.type === 'boardField' && !passExitField) {
-              nextFieldIndex = (fieldIndex + diceResult) % 40
-              nextField = boardFields[nextFieldIndex]
-              if (nextField.player === playerOn) {
-                continue
-              }
-            } else {
-              if (fig.type === 'homeField') {
-                nextFieldIndex = fieldIndex + diceResult
-              } else {
-                nextFieldIndex = diceResult - (exitFieldIndex - fieldIndex)
-              }
-              if (nextFieldIndex > pos.lastFreeHomeField) {
-                continue
-              }
-              const inTheWay = homeFields[playerOn].find(f => {
-                if (!f) {
-                  return false
+            const figIndex = fig.figIndex
+            const fieldIndex = fig.fieldIndex
+            let nextFieldIndex, nextField
+        
+            //if the piece is on a start field
+            if (fig.type === 'startField') {
+                if (diceResult === 6 && !onEntryField) {
+                    nextFieldIndex = entryFieldIndex
+                    nextField = boardFields[nextFieldIndex]
+                    if (nextField.player === playerOn) {
+                        continue
+                    }
+                    const move = getMoveValues(fieldIndex, fig.type, nextField, figIndex, pos.lastFreeHomeField, entryFieldIndex)
+                    movesArray.push(move)
+                    moveFieldsArray.push([fieldIndex, fig.type])
+                    moveFieldsArray.push([nextFieldIndex, nextField.type])      
+                } else if (pos.numFigsOut + pos.lastFreeHomeField === 4) {
+                    if (diceCount === 2) {
+                        dispatch(resetDiceCount())
+                        dispatch(getNextPlayer(participatingPlayers))
+                    } else {
+                        dispatch(incrementDiceCount())
+                    }
+                    return
                 }
-                return f.player && nextFieldIndex >= f.index
-                    && ((fieldIndex < f.index && fig.type === 'homeField') || fig.type === 'boardField')
-              })
-              if (inTheWay) {
-                continue
-              }
-              nextField = homeFields[playerOn][nextFieldIndex]
+        
+            // if the piece is on a board field or a home field
+            } else {
+                const moveFromEntryField = onEntryField && pos.numFigsOut < 4
+                    && !pos.positions.find(f => f.fieldIndex === entryFieldIndex + diceResult && f.type === 'boardField')
+                if ((diceResult === 6 && !onEntryField && pos.numFigsOut < 4)
+                    || (moveFromEntryField && fieldIndex !== entryFieldIndex)) {
+                    continue
+                }
+                const passExitField = fieldIndex <= exitFieldIndex && fieldIndex + diceResult > exitFieldIndex
+                if (fig.type === 'boardField' && !passExitField) {
+                    nextFieldIndex = (fieldIndex + diceResult) % 40
+                    nextField = boardFields[nextFieldIndex]
+                    if (nextField.player === playerOn) {
+                        continue
+                    }
+                } else {
+                    if (fig.type === 'homeField') {
+                        nextFieldIndex = fieldIndex + diceResult
+                    } else {
+                        nextFieldIndex = diceResult - (exitFieldIndex - fieldIndex)
+                    }
+                    if (nextFieldIndex > pos.lastFreeHomeField) {
+                        continue
+                    }
+                    const inTheWay = homeFields[playerOn].find(f => {
+                        if (!f) {
+                            return false
+                        }
+                        return f.player && nextFieldIndex >= f.index
+                            && ((fieldIndex < f.index && fig.type === 'homeField') || fig.type === 'boardField')
+                    })
+                    if (inTheWay) {
+                        continue
+                    }
+                    nextField = homeFields[playerOn][nextFieldIndex]
+                }
+                const move = getMoveValues(fieldIndex, fig.type, nextField, figIndex, pos.lastFreeHomeField, entryFieldIndex)
+                movesArray.push(move)
+                moveFieldsArray.push([fieldIndex, fig.type])
+                moveFieldsArray.push([nextFieldIndex, nextField.type])
             }
-            const move = getMoveValues(fieldIndex, fig.type, nextField, figIndex, pos.lastFreeHomeField, entryFieldIndex)
-            movesArray.push(move)
-            moveFieldsArray.push([fieldIndex, fig.type])
-            moveFieldsArray.push([nextFieldIndex, nextField.type])
-          }
         }
         if (movesArray.length === 0) {
-          dispatch(getNextPlayer(participatingPlayers))
+            dispatch(getNextPlayer(participatingPlayers))
         } else {
-          dispatch(setGotMoves(true))
-          dispatch(setMoves(movesArray))
-          dispatch(setMoveFields(moveFieldsArray))
+            dispatch(setGotMoves(true))
+            dispatch(setMoves(movesArray))
+            dispatch(setMoveFields(moveFieldsArray))
         }
-      }
+    }
 
-      useEffect(() => {
+    useEffect(() => {
         if (computerOn && !gotMoves && !diceThrown && !readyToCleanUp && gameOn && !hasWon) {
-          dispatch(throwDice())
-          dispatch(setDiceThrown(true))
+            dispatch(throwDice())
+            dispatch(setDiceThrown(true))
         }
-      }, [computerOn, diceThrown, dispatch, gotMoves, playerOn, gameOn, hasWon, readyToCleanUp])
+    }, [computerOn, diceThrown, dispatch, gotMoves, playerOn, gameOn, hasWon, readyToCleanUp])
   
-      useEffect(() => {
+    useEffect(() => {
         if (diceThrown && gameOn) {
-          getMoves()
-          dispatch(setDiceThrown(false))
+            getMoves()
+            dispatch(setDiceThrown(false))
         }
       }, [diceThrown, dispatch, getMoves, gameOn])
       
-      useEffect(() => {
-          const computerMoves = () => {
+    useEffect(() => {
+        const computerMoves = () => {
             let bestMove
             let bestMoveRating = -Infinity
             for (let move of moves) {
@@ -292,22 +292,22 @@ export function ExecutiveFunction() {
                 }
             }
             bestMove[0]()
-          }
-          if (computerOn && gotMoves && gameOn) {
-              computerMoves()
-          }
-      }, [computerOn, gotMoves, gameOn, diceThrown, moves])
-  
-      useEffect(() => {
-        if (readyToCleanUp) {
-          moveFields.forEach(mf => dispatch(cleanUp(mf)))
-          dispatch(setReadyToCleanUp(false))
-          if (goToNextPlayer) {
-            dispatch(getNextPlayer(participatingPlayers))
-            dispatch(setGoToNextPlayer(false))
-          }
         }
-      }, [dispatch, goToNextPlayer, moveFields, participatingPlayers, readyToCleanUp])
+        if (computerOn && gotMoves && gameOn) {
+            computerMoves()
+        }
+    }, [computerOn, gotMoves, gameOn, diceThrown, moves])
+  
+    useEffect(() => {
+        if (readyToCleanUp) {
+            moveFields.forEach(mf => dispatch(cleanUp(mf)))
+            dispatch(setReadyToCleanUp(false))
+            if (goToNextPlayer) {
+                dispatch(getNextPlayer(participatingPlayers))
+                dispatch(setGoToNextPlayer(false))
+            }
+        }
+    }, [dispatch, goToNextPlayer, moveFields, participatingPlayers, readyToCleanUp])
   
     return <div />
 }

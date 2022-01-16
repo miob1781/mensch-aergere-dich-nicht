@@ -42,9 +42,9 @@ export const selectParticipatingPlayers = state => {
     const players = state.start.players
     const participatingPlayers = []
     for (let player in players) {
-      if (players[player].plays) {
-        participatingPlayers.push(player)
-      }
+        if (players[player].plays) {
+            participatingPlayers.push(player)
+        }
     }
     return participatingPlayers
 }
