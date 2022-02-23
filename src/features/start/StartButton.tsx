@@ -1,8 +1,9 @@
 import styled from 'styled-components'
 import {cloneDeep} from 'lodash'
-import {useSelector, useDispatch} from 'react-redux'
-import {positions} from '../board/BoardFunctions.js'
-import {toggleGameOn, selectParticipatingPlayers} from './StartSlice.js'
+import {useAppSelector, useAppDispatch} from '../hooks'
+import {Player} from '../types'
+import {allPositions} from '../board/BoardFunctions'
+import {toggleGameOn, selectParticipatingPlayers} from './StartSlice'
 import {
     updateBoardFields,
     updateStartFields,
@@ -10,8 +11,9 @@ import {
     updatePositions,
     getInitialPlayer,
     resetValues
-} from '../board/BoardSlice.js'
+} from '../board/BoardSlice'
 
+/** styled component for StartButton */
 const Bttn = styled.button`
     color: white;
     background-color: darkgreen;
@@ -20,19 +22,20 @@ const Bttn = styled.button`
     cursor: pointer;
 `
 
+/** component for the start button */
 export function StartButton() {
-    const dispatch = useDispatch()
-    const gameOn = useSelector(state => state.start.gameOn)
-    const boardFields = cloneDeep(useSelector(state => state.board.boardFields))
-    const startFields = cloneDeep(useSelector(state => state.board.startFields))
-    const homeFields = cloneDeep(useSelector(state => state.board.homeFields))
-    const participatingPlayers = useSelector(selectParticipatingPlayers)
+    const dispatch = useAppDispatch()
+    const gameOn = useAppSelector(state => state.start.gameOn)
+    const boardFields = cloneDeep(useAppSelector(state => state.board.boardFields))
+    const startFields = cloneDeep(useAppSelector(state => state.board.startFields))
+    const homeFields = cloneDeep(useAppSelector(state => state.board.homeFields))
+    const participatingPlayers = useAppSelector(selectParticipatingPlayers)
 
-    // disables the button if less than two players are selected
-    let buttonDisabled = participatingPlayers.length < 2 
-    const style = buttonDisabled ? {backgroundColor: 'grey', cursor: 'inherit'} : null
+    /** disables the button if less than two players are selected */
+    let buttonDisabled: boolean = participatingPlayers.length < 2 
+    const style = buttonDisabled ? {backgroundColor: 'grey', cursor: 'inherit'} : undefined
 
-    // function to start a new game when clicking on the start button
+    /** function to start a new game when clicking on the start button */
     const startNewGame = () => {
         for (let startFieldsForPlayer in startFields) {
             for (let field of startFields[startFieldsForPlayer]) {
@@ -42,25 +45,25 @@ export function StartButton() {
                 if (participatingPlayers.includes(field.color)) {
                     field.player = field.color
                 } else {
-                    field.player = null
+                    field.player = Player.None
                 }
             }
         }
         for (let field of boardFields) {
-            field.player = null
+            field.player = Player.None
         }
         for (let homeFieldsForPlayer in homeFields) {
             for (let field of homeFields[homeFieldsForPlayer]) {
                 if (!field) {
                     continue
                 }
-            field.player = null
+            field.player = Player.None
             }
         } 
         dispatch(updateBoardFields(boardFields))
         dispatch(updateStartFields(startFields))
         dispatch(updateHomeFields(homeFields))
-        dispatch(updatePositions(positions))
+        dispatch(updatePositions(allPositions))
         dispatch(getInitialPlayer(participatingPlayers))
         dispatch(resetValues())
         dispatch(toggleGameOn())

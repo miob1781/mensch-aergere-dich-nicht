@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import {Start} from './features/start/Start.js'
-import {Board} from './features/board/Board.js'
-import {ExecutiveFunction} from './features/ExecutiveFunction.js'
+import {Start} from './features/start/Start'
+import {Board} from './features/board/Board'
+import {ExecutiveFunction} from './features/ExecutiveFunction'
 
-const AppBody = styled.body`
+const AppBody = styled.div`
     background-color: white;
     font-family: Calibri, 'Trebuchet MS', sans-serif;
     box-sizing: border-box;

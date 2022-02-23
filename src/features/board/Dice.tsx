@@ -1,43 +1,45 @@
 import {useState} from 'react'
-import {useSelector, useDispatch} from 'react-redux'
-import {DiceContainer, getDiceDots} from './CreateDice.js'
-import {selectReadyToClickOnDice} from '../start/StartSlice.js'
-import {throwDice, setDiceThrown} from './BoardSlice.js'
+import {useAppSelector, useAppDispatch} from '../hooks'
+import {Player} from '../types'
+import {DiceContainer, getDiceDots} from './CreateDice'
+import {selectReadyToClickOnDice} from '../start/StartSlice'
+import {throwDice, setDiceThrown} from './BoardSlice'
 
+/** dice component */
 export function Dice() {
-    const dispatch = useDispatch()
-    const diceResult = useSelector(state => state.board.dice)
-    const playerOn = useSelector(state => state.board.playerOn)
-    const readyToClickOnDice = useSelector(selectReadyToClickOnDice)
-    const diceWhite = useSelector(state => state.board.diceThrown || state.board.gotMoves)
+    const dispatch = useAppDispatch()
+    const diceResult = useAppSelector(state => state.board.dice)
+    const playerOn = useAppSelector(state => state.board.playerOn)
+    const readyToClickOnDice = useAppSelector(selectReadyToClickOnDice)
+    const diceWhite = useAppSelector(state => state.board.diceThrown || state.board.gotMoves)
     const [isPlaying, setIsPlaying] = useState(false)
 
     // sets position of dice
-    let right, bottom
-    const onPhone = window.innerWidth <= 600
-    if (playerOn === 'yellow') {
+    let right: string, bottom: string
+    const onPhone: boolean = window.innerWidth <= 600
+    if (playerOn === Player.Yellow) {
         right = onPhone ? '-19vw' : '-115px'
         bottom = onPhone ? '23vw' : '130px'
-    } else if (playerOn === 'red') {
+    } else if (playerOn === Player.Red) {
         right = onPhone ? '-19vw' : '-115px'
         bottom = onPhone ? '-18vw' : '-110px'
-    } else if (playerOn === 'green') {
+    } else if (playerOn === Player.Green) {
         right = onPhone ? '23vw' : '130px'
         bottom = onPhone ? '-18vw' : '-110px'
-    } else {
+    } else if (playerOn === Player.Blue) {
         right = onPhone ? '23vw' : '130px'
         bottom = onPhone ? '23vw' : '130px'
     }
     
-    const style = {
-        right: right,
+    const style: {[attribute: string]: string} = { // @ts-ignore
+        right: right, // @ts-ignore
         bottom: bottom,
         cursor: readyToClickOnDice ? 'pointer' : 'inherit',
         backgroundColor: diceWhite ? 'white' : 'lightgrey',
         animation: isPlaying ? 'diceLightUp 400ms ease-out 0s 1 normal forwards' : 'unset'
     }
 
-    const handleClick = () => {
+    const handleClick = (): void => {
       if (readyToClickOnDice) {
         setIsPlaying(true)
         dispatch(throwDice())

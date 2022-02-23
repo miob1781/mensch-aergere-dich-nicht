@@ -1,27 +1,32 @@
 import styled from 'styled-components'
-import {useSelector, useDispatch} from 'react-redux'
-import {togglePlayerPlays, toggleComputerPlays} from './StartSlice.js'
+import {useAppSelector, useAppDispatch} from '../hooks'
+import {Player as P} from '../types'
+import {getPlayer} from '../board/BoardFunctions'
+import {togglePlayerPlays, toggleComputerPlays} from './StartSlice'
 
+/** form component to start a new game */
 const Form = styled.form`
     margin-bottom: 3px;
 `
 
+/** radio button component */
 const Radio = styled.div`
     margin-left: 20px;
 `
 
-export function Player(props) {
+/** player component to make selections for each player */
+export function Player(props: {player: string}) {
     const {player} = props
-    const playerLabels = {yellow: 'Yellow', red: 'Red', green: 'Green', blue: 'Blue'}
-    const dispatch = useDispatch()
-    const players = useSelector(state => state.start.players)
+    const dispatch = useAppDispatch()
+    const players = useAppSelector(state => state.start.players)
+    const playerTyped: P = getPlayer(player)
 
     const handleCheckbox = () => {
-        dispatch(togglePlayerPlays(player))
+        dispatch(togglePlayerPlays(playerTyped))
     }
 
     const handleRadio = () => {
-        dispatch(toggleComputerPlays(player))
+        dispatch(toggleComputerPlays(playerTyped))
     }
 
     return (
@@ -33,7 +38,7 @@ export function Player(props) {
                 onChange={handleCheckbox}
                 checked={players[player].plays}
             />
-            <label for={player}>{playerLabels[player]}</label>
+            <label htmlFor={player}>{player}</label>
             <br />
             <Radio>
                 <input
@@ -45,7 +50,7 @@ export function Player(props) {
                     checked={!players[player].computerPlays}
                     disabled={!players[player].plays}
                 />
-                <label style={{marginRight: '10px'}} for={'human-' + player}>Human</label>
+                <label style={{marginRight: '10px'}} htmlFor={'human-' + player}>Human</label>
                 <input
                     type='radio'
                     id={'computer-' + player}
@@ -56,7 +61,7 @@ export function Player(props) {
                     disabled={!players[player].plays}
                     data-testid={player + '-computer'}
                 />
-                <label for={'computer-' + player}>Computer</label>
+                <label htmlFor={'computer-' + player}>Computer</label>
             </Radio>
         </Form>
     )

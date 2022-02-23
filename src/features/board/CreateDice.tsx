@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 
+/** styled component for the dice */
 export const DiceContainer = styled.div`
     @keyframes diceLightUp {
         from {
@@ -35,9 +36,24 @@ export const DiceContainer = styled.div`
         border: black 0.6vw solid;
     }
 `
+interface DotProps {
+    row: number,
+    column: number,
+    visibility: string
+}
 
-const getDiceDot = (key, row, column, dice) => {
-    let visibility = 'hidden'
+/** component for the dots on the dice */
+const Dot = styled.div`
+    grid-row-start: ${(props: DotProps) => props.row};
+    grid-column-start: ${props => props.column};
+    border-radius: 50%;
+    background-color: black;
+    visibility: ${props => props.visibility};
+`
+
+/** utility function to return a component for a dot of the dice */
+const getDotValues = (key: number, row: number, column: number, dice: number): [number, number, number, string] => {
+    let visibility: string = 'hidden'
     switch(dice) {
         case 1:
             if (key === 22) {
@@ -69,25 +85,27 @@ const getDiceDot = (key, row, column, dice) => {
                 visibility = 'visible'
             }
             break
-        default: alert('no dice')
+        default: console.log('no dice')
         }
-    const Dot = styled.div`
-        grid-row-start: ${row};
-        grid-column-start: ${column};
-        border-radius: 50%;
-        background-color: black;
-        visibility: ${visibility};
-    `
-    return <Dot key={key} />
+    const dotValues: [number, number, number, string] = [key, row, column, visibility]
+    return dotValues
 }
 
-export const getDiceDots = dice => {
-    let diceDots = []
-    let key
-    for (let i=1; i<4; i++){
-        for (let j=1; j<4; j++){
-            key = i * 10 + j
-            diceDots.push(getDiceDot(key, i, j, dice))
+/** function to return the dice dots */
+export const getDiceDots = (dice: number): JSX.Element[] => {
+    let diceDots: JSX.Element[] = []
+    for (let i=1; i<4; i++) {
+        for (let j=1; j<4; j++) {
+            const keyValue: number = i * 10 + j
+            const dotValues: [number, number, number, string] = getDotValues(keyValue, i, j, dice)
+            const [key, row, column, visibility] = dotValues
+            const dot: JSX.Element = <Dot
+                key={Number(key).toString()}
+                row={row}
+                column={column}
+                visibility={visibility}
+            />
+            diceDots.push(dot)
         }
     }
     return diceDots
