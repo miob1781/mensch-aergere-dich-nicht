@@ -299,6 +299,7 @@ export function ExecutiveFunction() {
             }
             if (movesArray.length === 0) {
                 dispatch(getNextPlayer(participatingPlayers))
+                dispatch(setReadyToThrowDice(true))
             } else {
                 dispatch(setMoves(movesArray))
                 dispatch(setMoveFields(moveFieldsArray))
