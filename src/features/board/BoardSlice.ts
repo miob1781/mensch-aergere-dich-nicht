@@ -11,7 +11,8 @@ import {
     MoveField,
     UpdateField,
     UpdateFieldAfterMove,
-    UpdatePosition
+    UpdatePosition,
+    ExecuteMove
 } from '../types'
 import {boardFields, startFields, homeFields} from './GetField';
 import {allPositions, getStringFromPlayer} from './BoardFunctions'
@@ -23,10 +24,13 @@ const initialState: BoardState = {
     allPositions: allPositions,
     moves: [],
     moveFields: [],
+    execution: undefined,
     dice: 3,
     playerOn: Player.Blue,
+    readyToThrowDice: false,
     diceThrown: false,
     gotMoves: false,
+    readyToExecuteMove: false,
     readyToCleanUp: false,
     goToNextPlayer: false,
     diceCount: 0,
@@ -102,15 +106,24 @@ const boardSlice = createSlice({
         setMoveFields: (state, action: PayloadAction<MoveField[]>) => {
             state.moveFields = action.payload
         },
+        setExecution: (state, action: PayloadAction<ExecuteMove>) => {
+            state.execution = action.payload
+        },
         throwDice: state => {
             const result: number = Math.floor(Math.random() * 6) + 1
             state.dice = result
+        },
+        setReadyToThrowDice: (state, action: PayloadAction<boolean>) => {
+            state.readyToThrowDice = action.payload
         },
         setDiceThrown: (state, action: PayloadAction<boolean>) => {
             state.diceThrown = action.payload
         },
         setGotMoves: (state, action: PayloadAction<boolean>) => {
             state.gotMoves = action.payload
+        },
+        setReadyToExecuteMove: (state, action: PayloadAction<boolean>) => {
+            state.readyToExecuteMove = action.payload
         },
         setReadyToCleanUp: (state, action: PayloadAction<boolean>) => {
             state.readyToCleanUp = action.payload
@@ -165,8 +178,13 @@ const boardSlice = createSlice({
             state.figIndexMouse = undefined
         },
         resetValues: state => {
+            state.moves = []
+            state.moveFields = []
+            state.execution = undefined
+            state.readyToThrowDice = false
             state.diceThrown = false
             state.gotMoves = false
+            state.readyToExecuteMove = false
             state.readyToCleanUp = false
             state.goToNextPlayer = false
             state.hasWon = undefined
@@ -186,9 +204,12 @@ export const {
     updatePosition,
     setMoves,
     setMoveFields,
+    setExecution,
     throwDice,
+    setReadyToThrowDice,
     setDiceThrown,
     setGotMoves,
+    setReadyToExecuteMove,
     setReadyToCleanUp,
     cleanUp,
     getNextPlayer,

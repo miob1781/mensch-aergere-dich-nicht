@@ -174,14 +174,20 @@ export interface BoardState {
     moves?: Move[],
     /** values of move-related fields */
     moveFields?: MoveField[],
+    /** move to execute */
+    execution?: ExecuteMove,
     /** dice value */
     dice: number,
     /** player who is on */
     playerOn: Player,
+    /** is it time to throw the dice? */
+    readyToThrowDice: boolean,
     /** has the dice been thrown? */
     diceThrown: boolean,
     /** have we got moves? */
     gotMoves: boolean,
+    /** are we ready to execute the move? */
+    readyToExecuteMove: boolean,
     /** are we ready to clean up? */
     readyToCleanUp: boolean,
     /** can we go to the next player? */

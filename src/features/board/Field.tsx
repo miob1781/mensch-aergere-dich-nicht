@@ -5,13 +5,9 @@ import {getStringFromPlayer} from './BoardFunctions'
 import {
     setMouseOver,
     setMouseOut,
-    resetDiceCount,
     setGotMoves,
-    setGoToNextPlayer,
-    setHasWon,
-    setReadyToCleanUp,
-    updateFieldAfterMove,
-    updatePosition
+    setExecution,
+    setReadyToExecuteMove
 } from './BoardSlice'
 
 interface PropsFieldContainer {
@@ -71,7 +67,9 @@ export function Field(props: FieldProps) {
         return isMoveTo && state.board.mouseOverMoveFrom && !computerOn // @ts-ignore
         && figIndexArray.includes(state.board.figIndexMouse)
     })
-    const playerOn: Player|null = useAppSelector(state => displayDottedBorder ? state.board.playerOn : null)
+    const playerOn: Player|null = useAppSelector(state => {
+        return displayDottedBorder ? state.board.playerOn : null
+    })
 
     /** colors for home and start fields */
     const fieldColors: {[color: string]: string} = {
@@ -120,30 +118,9 @@ export function Field(props: FieldProps) {
 
     const handleClick = () => {
         if (readyToMove && executeMove) {
-            const {
-                winning,
-                checkHitObject,
-                updateFieldAfterMoveObject,
-                updateNextFieldAfterMoveObject,
-                updatePositionObject
-            } = executeMove
-            if (checkHitObject) {
-                dispatch(updateFieldAfterMove(checkHitObject.oppFieldObject))
-                dispatch(updatePosition(checkHitObject.oppPlayerObject))    
-            }
-            if (type === FieldType.Start) {
-                dispatch(resetDiceCount())
-            } else {
-                dispatch(setGoToNextPlayer(true))
-            }
-            dispatch(updateFieldAfterMove(updateFieldAfterMoveObject))
-            dispatch(updateFieldAfterMove(updateNextFieldAfterMoveObject))
-            dispatch(updatePosition(updatePositionObject))
+            dispatch(setExecution(executeMove))
             dispatch(setGotMoves(false))
-            dispatch(setReadyToCleanUp(true))
-            if (winning && playerOn) {
-                dispatch(setHasWon(playerOn))
-            }        
+            dispatch(setReadyToExecuteMove(true))
         }
     }
 

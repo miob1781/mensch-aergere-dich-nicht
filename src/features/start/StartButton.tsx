@@ -10,7 +10,8 @@ import {
     updateHomeFields,
     updatePositions,
     getInitialPlayer,
-    resetValues
+    resetValues,
+    setReadyToThrowDice
 } from '../board/BoardSlice'
 
 /** styled component for StartButton */
@@ -66,6 +67,7 @@ export function StartButton() {
         dispatch(updatePositions(allPositions))
         dispatch(getInitialPlayer(participatingPlayers))
         dispatch(resetValues())
+        dispatch(setReadyToThrowDice(true))
         dispatch(toggleGameOn())
     }
 

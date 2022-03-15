@@ -31,5 +31,5 @@ test('renders app and starts game properly, then clicks on dice', () => {
     userEvent.click(screen.getByTestId('start-button'))
     userEvent.click(screen.getByTestId('dice'))
 
-    expect(screen.getByTestId('dice')).toHaveStyle(`background-color: white;`)  
+    expect(screen.getByTestId('dice')).toHaveStyle(`background-color: lightgrey;`)  
 })

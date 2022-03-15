@@ -64,13 +64,5 @@ export const selectComputerOn = (state: RootState): boolean => {
     return computerOn
 }
 
-/** selector to determine if the player can click on the dice to throw it */
-export const selectReadyToClickOnDice = (state: RootState): boolean => {
-    const computerOn: boolean = selectComputerOn(state) 
-    const readyToClickOnDice: boolean = state.start.gameOn && !computerOn && !state.board.diceThrown
-    && !state.board.gotMoves && !state.board.readyToCleanUp
-    return readyToClickOnDice
-}
-
 export default startSlice.reducer;
 export const {toggleGameOn, togglePlayerPlays, toggleComputerPlays} = startSlice.actions;
