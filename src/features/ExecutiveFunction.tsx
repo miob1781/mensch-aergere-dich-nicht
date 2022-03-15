@@ -366,7 +366,7 @@ export function ExecutiveFunction() {
         const timer = setTimeout(() => {
             if (readyToCleanUp) { // @ts-ignore
                 moveFields.forEach(mf => dispatch(cleanUp(mf)))
-                if (goToNextPlayer) {
+                if (goToNextPlayer && !hasWon) {
                     dispatch(getNextPlayer(participatingPlayers))
                     dispatch(setGoToNextPlayer(false))
                 }
