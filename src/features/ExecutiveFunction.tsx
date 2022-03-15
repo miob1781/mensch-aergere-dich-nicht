@@ -44,6 +44,7 @@ export function ExecutiveFunction() {
     const diceResult = useAppSelector(state => state.board.dice)
     const diceCount = useAppSelector(state => state.board.diceCount)
     const gameOn = useAppSelector(state => state.start.gameOn)
+    const hasWon = useAppSelector(state => state.board.hasWon)
     const moveFields = useAppSelector(state => state.board.moveFields)
     const moves = useAppSelector(state => state.board.moves)
     const execution = useAppSelector(state => state.board.execution)
@@ -370,11 +371,13 @@ export function ExecutiveFunction() {
                     dispatch(setGoToNextPlayer(false))
                 }
                 dispatch(setReadyToCleanUp(false))
-                dispatch(setReadyToThrowDice(true))
+                if (!hasWon) {
+                    dispatch(setReadyToThrowDice(true))
+                }
             }
         }, delay)
         return () => clearTimeout(timer)
-    }, [dispatch, computerOn, moveFields, participatingPlayers, readyToCleanUp, goToNextPlayer])
+    }, [dispatch, computerOn, hasWon, moveFields, participatingPlayers, readyToCleanUp, goToNextPlayer])
 
     return <div />
 }

@@ -8,6 +8,7 @@ import {throwDice, setDiceThrown, setReadyToThrowDice} from './BoardSlice'
 /** dice component */
 export function Dice() {
     const dispatch = useAppDispatch()
+    const gameOn = useAppSelector(state => state.start.gameOn)
     const diceResult = useAppSelector(state => state.board.dice)
     const playerOn = useAppSelector(state => state.board.playerOn)
     const computerOn = useAppSelector(selectComputerOn)
@@ -32,7 +33,7 @@ export function Dice() {
         right = onPhone ? '23vw' : '130px'
         bottom = onPhone ? '23vw' : '130px'
     }
-    
+
     const style: {[attribute: string]: string} = {
         right: right,
         bottom: bottom,
@@ -42,7 +43,7 @@ export function Dice() {
     }
 
     const handleClick = () => {
-        if (!computerOn && readyToThrowDice) {
+        if (!computerOn && readyToThrowDice && gameOn) {
             setIsPlaying(true)
             dispatch(setReadyToThrowDice(false))
             dispatch(throwDice())
@@ -55,13 +56,13 @@ export function Dice() {
     }
 
     useEffect(() => {
-        if (computerOn && readyToThrowDice) {
+        if (computerOn && readyToThrowDice && gameOn) {
             setIsPlaying(true)
             dispatch(setReadyToThrowDice(false))
             dispatch(throwDice())
         }
-    }, [computerOn, dispatch, playerOn, readyToThrowDice])
-  
+    }, [dispatch, gameOn, computerOn, playerOn, readyToThrowDice])
+
     return (
         <DiceContainer
             style={style}
