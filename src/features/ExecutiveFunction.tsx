@@ -4,6 +4,7 @@ import {getStringFromPlayer} from './board/BoardFunctions'
 import {selectParticipatingPlayers, selectComputerOn} from './start/StartSlice'
 import {
     Field,
+    HomeOrStartFields,
     FieldType,
     Player,
     Fig,
@@ -14,6 +15,7 @@ import {
     UpdateField,
     UpdateFieldAfterMove,
     UpdatePosition,
+    ExecuteMove
 } from './types'
 import {
     updateFieldAfterDiceThrown,
@@ -38,24 +40,24 @@ import {
 /** utility component to execute most of the code during the game */
 export function ExecutiveFunction() {
     const dispatch = useAppDispatch()
-    const boardFields = useAppSelector(state => state.board.boardFields)
-    const homeFields = useAppSelector(state => state.board.homeFields)
-    const allPositions = useAppSelector(state => state.board.allPositions)
-    const diceResult = useAppSelector(state => state.board.dice)
-    const diceCount = useAppSelector(state => state.board.diceCount)
-    const gameOn = useAppSelector(state => state.start.gameOn)
-    const hasWon = useAppSelector(state => state.board.hasWon)
-    const moveFields = useAppSelector(state => state.board.moveFields)
-    const moves = useAppSelector(state => state.board.moves)
-    const execution = useAppSelector(state => state.board.execution)
-    const playerOn = useAppSelector(state => state.board.playerOn)
-    const diceThrown = useAppSelector(state => state.board.diceThrown)
-    const gotMoves = useAppSelector(state => state.board.gotMoves)
-    const readyToExecuteMove = useAppSelector(state => state.board.readyToExecuteMove)
-    const readyToCleanUp = useAppSelector(state => state.board.readyToCleanUp)
-    const participatingPlayers = useAppSelector(selectParticipatingPlayers)
-    const computerOn = useAppSelector(selectComputerOn)
-    const goToNextPlayer = useAppSelector(state => state.board.goToNextPlayer)
+    const boardFields: Field[] = useAppSelector(state => state.board.boardFields)
+    const homeFields: HomeOrStartFields = useAppSelector(state => state.board.homeFields)
+    const allPositions: {[color: string]: Positions} = useAppSelector(state => state.board.allPositions)
+    const diceResult: number = useAppSelector(state => state.board.dice)
+    const diceCount: number = useAppSelector(state => state.board.diceCount)
+    const gameOn: boolean = useAppSelector(state => state.start.gameOn)
+    const hasWon: Player|undefined = useAppSelector(state => state.board.hasWon)
+    const moveFields: MoveField[]|undefined = useAppSelector(state => state.board.moveFields)
+    const moves: Move[]|undefined = useAppSelector(state => state.board.moves)
+    const execution: ExecuteMove|undefined = useAppSelector(state => state.board.execution)
+    const playerOn: Player = useAppSelector(state => state.board.playerOn)
+    const diceThrown: boolean = useAppSelector(state => state.board.diceThrown)
+    const gotMoves: boolean = useAppSelector(state => state.board.gotMoves)
+    const readyToExecuteMove: boolean = useAppSelector(state => state.board.readyToExecuteMove)
+    const readyToCleanUp: boolean = useAppSelector(state => state.board.readyToCleanUp)
+    const participatingPlayers: Player[] = useAppSelector(selectParticipatingPlayers)
+    const computerOn: boolean = useAppSelector(selectComputerOn)
+    const goToNextPlayer: boolean = useAppSelector(state => state.board.goToNextPlayer)
 
     useEffect(() => {
         /** checks if an opponent is hit */
@@ -63,8 +65,8 @@ export function ExecutiveFunction() {
             if (nextField.player === Player.None) {
                 return
             } else {
-                const oppPlayer: Player = nextField.player // @ts-ignore
-                const oppFig: Fig = allPositions[getStringFromPlayer(oppPlayer)].positions.find(fig => fig.fieldIndex === nextField.index && fig.type === FieldType.Board)
+                const oppPlayer: Player = nextField.player
+                const oppFig: Fig = allPositions[getStringFromPlayer(oppPlayer)].positions.find(fig => fig.fieldIndex === nextField.index && fig.type === FieldType.Board)!
                 const oppFieldObject: UpdateFieldAfterMove = {
                     fieldIndex: oppFig.figIndex,
                     type: FieldType.Start,
@@ -191,8 +193,8 @@ export function ExecutiveFunction() {
                     }
                     moveRating += progress
                 }
-            } // @ts-ignore
-            const move: Move = [updateFieldObject.executeMove, moveRating]
+            }
+            const move: Move = [updateFieldObject.executeMove!, moveRating]
             return move
         }
         
@@ -364,8 +366,8 @@ export function ExecutiveFunction() {
     useEffect(() => {
         const delay = computerOn ? 1000 : 0
         const timer = setTimeout(() => {
-            if (readyToCleanUp) { // @ts-ignore
-                moveFields.forEach(mf => dispatch(cleanUp(mf)))
+            if (readyToCleanUp) {
+                moveFields!.forEach(mf => dispatch(cleanUp(mf)))
                 if (goToNextPlayer && !hasWon) {
                     dispatch(getNextPlayer(participatingPlayers))
                     dispatch(setGoToNextPlayer(false))

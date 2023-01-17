@@ -64,12 +64,10 @@ export function Field(props: FieldProps) {
     const displayDottedBorder: boolean = useAppSelector(state => {
         const playerOn: Player = state.board.playerOn
         const computerOn: boolean = state.start.players[getStringFromPlayer(playerOn)].computerPlays
-        return isMoveTo && state.board.mouseOverMoveFrom && !computerOn // @ts-ignore
-        && figIndexArray.includes(state.board.figIndexMouse)
+        return isMoveTo && state.board.mouseOverMoveFrom && !computerOn
+        && figIndexArray.includes(state.board.figIndexMouse!)
     })
-    const playerOn: Player|null = useAppSelector(state => {
-        return displayDottedBorder ? state.board.playerOn : null
-    })
+    const playerOn: Player = useAppSelector(state => displayDottedBorder ? state.board.playerOn : null)!
 
     /** colors for home and start fields */
     const fieldColors: {[color: string]: string} = {

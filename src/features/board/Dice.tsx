@@ -8,12 +8,12 @@ import {throwDice, setDiceThrown, setReadyToThrowDice} from './BoardSlice'
 /** dice component */
 export function Dice() {
     const dispatch = useAppDispatch()
-    const gameOn = useAppSelector(state => state.start.gameOn)
-    const diceResult = useAppSelector(state => state.board.dice)
-    const playerOn = useAppSelector(state => state.board.playerOn)
-    const computerOn = useAppSelector(selectComputerOn)
-    const readyToThrowDice = useAppSelector(state => state.board.readyToThrowDice)
-    const diceWhite = useAppSelector(state => state.board.diceThrown || state.board.gotMoves)
+    const gameOn: boolean = useAppSelector(state => state.start.gameOn)
+    const diceResult: number = useAppSelector(state => state.board.dice)
+    const playerOn: Player = useAppSelector(state => state.board.playerOn)
+    const computerOn: boolean = useAppSelector(selectComputerOn)
+    const readyToThrowDice: boolean = useAppSelector(state => state.board.readyToThrowDice)
+    const diceWhite: boolean = useAppSelector(state => state.board.diceThrown || state.board.gotMoves)
     const [isPlaying, setIsPlaying] = useState(false)
 
     // sets position of dice

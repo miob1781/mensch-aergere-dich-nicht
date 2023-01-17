@@ -87,17 +87,17 @@ const boardSlice = createSlice({
         },
         updatePosition: (state, action: PayloadAction<UpdatePosition>) => {
             const {player, figIndex, fieldIndex, type, changeNumFigsOut, decrementLastFreeHomeField} = action.payload
-            const playerPositions: Positions = state.allPositions[getStringFromPlayer(player)] // @ts-ignore
-            const fig: Fig = playerPositions.positions.find(f => f.figIndex === figIndex)
+            const playerPositions: Positions = state.allPositions[getStringFromPlayer(player)]
+            const fig: Fig = playerPositions.positions.find(f => f.figIndex === figIndex)!
             fig.fieldIndex = fieldIndex
             fig.type = type
             if (changeNumFigsOut === 'increment') {
-             playerPositions.numFigsOut++
+                playerPositions.numFigsOut++
             } else if (changeNumFigsOut === 'decrement') {
-             playerPositions.numFigsOut--
+                playerPositions.numFigsOut--
             }
             if (decrementLastFreeHomeField) {
-             playerPositions.lastFreeHomeField--
+                playerPositions.lastFreeHomeField--
             }
         },
         setMoves: (state, action: PayloadAction<Move[]>) => {

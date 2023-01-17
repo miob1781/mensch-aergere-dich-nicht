@@ -15,7 +15,7 @@ const StartContainer = styled.div`
 
 /** component to start a new game */
 export function Start() {
-    const gameOn = useAppSelector(state => state.start.gameOn)
+    const gameOn: boolean = useAppSelector(state => state.start.gameOn)
     const allPlayers: string[] = ['Yellow', 'Red', 'Green', 'Blue']
 
     return (

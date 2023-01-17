@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { Start } from './features/start/Start'
-import { Board } from './features/board/Board'
-import { ExecutiveFunction } from './features/ExecutiveFunction'
+import {Start} from './features/start/Start'
+import {Board} from './features/board/Board'
+import {ExecutiveFunction} from './features/ExecutiveFunction'
 import KaushanScriptWoff from './assets/fonts/kaushan-script-v14-latin-regular.woff'
 import KaushanScriptWoff2 from './assets/fonts/kaushan-script-v14-latin-regular.woff2'
 
