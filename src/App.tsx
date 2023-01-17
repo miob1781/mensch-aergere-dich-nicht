@@ -11,28 +11,37 @@ const AppBody = styled.div`
     box-sizing: border-box;
 `
 // TO DO: Find a way to avoid the flickering (reloading of the font?) of the heading.
+// Update: This problem does not occur in production.
 const Header = styled.header`
 
-/* kaushan-script-regular - latin */
-@font-face {
-  font-family: 'Kaushan Script';
-  font-style: normal;
-  font-weight: 400;
-  src:
-    local(''),
-    url(${KaushanScriptWoff2}) format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url(${KaushanScriptWoff}) format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  font-display: fallback;
-}
+    /* kaushan-script-regular - latin */
+    @font-face {
+        font-family: 'Kaushan Script';
+        font-style: normal;
+        font-weight: 400;
+        src:
+            local(''),
+            url(${KaushanScriptWoff2}) format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url(${KaushanScriptWoff}) format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        font-display: fallback;
+    }
 
     font-family: 'Kaushan Script', cursive;
     font-size: 1.3em;
+    display: flex;
+    justify-content: center;
 `
 
-const Main = styled.main``
+const Main = styled.main`
+    @media only screen and (min-width: 601px) {
+        display: flex;
+        justify-content: center;
+    }
+`
 
 const Footer = styled.footer`
     font-size: 0.8em;
+    text-align: center;
 `
 
 function App() {

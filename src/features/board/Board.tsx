@@ -7,16 +7,17 @@ import {boardFields, startFields, homeFields} from './GetField';
 /** styled component for Board */
 const BoardContainer = styled.div`
     display: inline-grid;
+    justify-content: center;
     max-width: 490px;
     padding: 20px;
-    margin-left: 50px;
+    margin-left: 30px;
     margin-right: 10px;
     grid-template-columns: repeat(11, minmax(0, 40px));
     grid-template-rows: repeat(11, minmax(0, 40px));
     gap: 5px;
     background-color: maroon;
     @media only screen and (max-width: 600px) {
-        margin-left: 0px;
+        margin-left: 10px;
         margin-right: 20px;
         display: grid;
         width: 84vw;

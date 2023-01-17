@@ -6,6 +6,7 @@ import {Display} from './Display'
 
 /** styled component for the Start component */
 const StartContainer = styled.div`
+    margin-left: 10px;
     margin-bottom: 20px;
     @media only screen and (max-width: 600px) {
         font-size: 1.4em;
